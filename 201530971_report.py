@@ -1,4 +1,4 @@
-
+import pandas as pd
 #레벤슈타인 거리 구하기
 def calc_distance(a,b):
         
@@ -26,8 +26,6 @@ def calc_distance(a,b):
         ])
     return matrix[a_len][b_len]
 
-import pandas as pd
-
 class SimpleChatBot():
     
     def __init__(self, filepath):
@@ -45,7 +43,7 @@ class SimpleChatBot():
 #가장 높은 유사도를 가진 질문의 답변을 반환함
     def find_best_answer(self, input_sentence):
     
-        samples = [cal_distance(input_sentence,question) for question in self.questions]
+        samples = [calc_distance(input_sentence,question) for question in self.questions]
         best_match_index = samples.index(min(samples))
         return self.answers[best_match_index] #chat의 질문과 레벤슈타인 거리와 가장 유사한 학습데이터의 질문의 인덱스를 구하기   
             
