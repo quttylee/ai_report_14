@@ -32,51 +32,23 @@ class SimpleChatBot():
     
     def __init__(self, filepath):
         self.questions, self.answers = self.load_data(filepath)
-        #self.calc_distance = calc_distance() #질문을 레벤슈테인 거리재기로 변환
-        #self.vectorizer = TfidfVectorizer()
-        #self.question_vectors = self.vectorizer.fit_transform(self.questions)  # 질문을 TF-IDF로 변환
         
 #csv파일로부터 질문과 답변 데이터를 불러오는 메서드
     def load_data(self, filepath):
         data = pd.read_csv(filepath)
         questions = data['Q'].tolist()  # 질문열만 뽑아 파이썬 리스트로 저장
         answers = data['A'].tolist()   # 답변열만 뽑아 파이썬 리스트로 저장
-        return questions, answers
-    
+        return questions, answers   
     
 #입력문장에 가장 잘 맞는 댭변을 찾는 메서드,
 #입력문장과 기존 데이터 질문문장과의 레벤슈타인거리를 이용한 문장유사도 분석하여
 #가장 높은 유사도를 가진 질문의 답변을 반환함
     def find_best_answer(self, input_sentence):
     
-        samples = self.questions
-        #r = samples
-        #samples.insert(0,input_sentence)
-        #base=samples[0]
-        r = sorted(samples, key = lambda n: calc_distance(input_sentence, n))  # samples 리스트의 각 요소에 대해 calc_distance(base, n) 함수를 호출하여 레벤슈타인 거리를 계산하고, 이를 기준으로 리스트를 정렬
-        for n in r:
-            return (calc_distance(input_sentence, n), n)  #학습데이터의 질문과 chat의 질문의 유사도를 레벤슈타인 거리를 이용해 구하기
+        samples = [cal_distance(input_sentence,question) for question in self.questions]
+        best_match_index = samples.index(min(samples))
+        return self.answers[best_match_index] #chat의 질문과 레벤슈타인 거리와 가장 유사한 학습데이터의 질문의 인덱스를 구하기   
             
-            similarities = calc_distance(input_sentence,n)
-            #best_match_index=similarities.argmin()
-            #best_match_index=similarities.argmax()
-        return self.answers[best_match_index] #chat의 질문과 레벤슈타인 거리와 가장 유사한 학습데이터의 질문의 인덱스를 구하기
-        
-        #calc_distance = self.calc_distance(input_sentence,self.questions)
-        #base=input_sentence
-        #r = sorted(input_sentence, key = lambda n: calc_distance(base, n))  # samples 리스트의 각 요소에 대해 calc_distance(base, n) 함수를 호출하여 레벤슈타인 거리를 계산하고, 이를 기준으로 리스트를 정렬
-        #for n in r:
-            
-            #similarities = calc_distance(input_sentence, n)
-            #best_match_index= similarities.argmin()
-            #return self.answers[best_match_index]
-        
-        #input_vector = self.vectorizer.transform([input_sentence])
-        #similarities = cosine_similarity(input_vector, self.question_vectors) # 코사인 유사도 값들을 저장
-        #best_match_index = similarities.argmax()   # 유사도 값이 가장 큰 값의 인덱스를 반환
-        #return self.answers[best_match_index]
-        
-    
     
 #CSV 파일 경로를 지정하세요.
 filepath = 'ChatbotData.csv'
